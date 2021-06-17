@@ -1,4 +1,3 @@
-import { HeatLatLngTuple } from "leaflet";
 
 export interface AirportNoise {
     IATA: string;
@@ -11,11 +10,9 @@ export class AirportService {
 
     private baseUrl: string = "http://localhost:8000";
 
-    async getNoise(): Promise<HeatLatLngTuple[]> {
+    async getNoise(): Promise<AirportNoise[]> {
         return fetch(`${this.baseUrl}/airport-noise`)
             .then(request => request.json())
-            .then(json => json as AirportNoise[])
-            .then(noise => noise
-                .map(n => [n.coordinates[0], n.coordinates[1], n.intensity] as HeatLatLngTuple));
+            .then(json => json as AirportNoise[]);
     }
 }
