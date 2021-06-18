@@ -50,4 +50,4 @@ def get_restaurants():
 
 @app.get("/aldi/")
 def get_aldi():
-    return {'nord': aldi.nord, 'sued': aldi.sued}
+    return {'nord': aldi.nord, 'sued': aldi.sued, 'germany': aldi.germany}
