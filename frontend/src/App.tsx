@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import AirportNoiseButton from './AirportNoiseButton';
 import { AirportService, AldiData } from './AirportService';
 import { GoldilocksData, GoldilocksMap, GoldilocksMapProps } from './GoldilocksMap';
@@ -25,14 +25,12 @@ export default function App() {
 
   const handleSchoolClick = () => {
     if (school === ButtonState.WHATEVER) setSchool(ButtonState.WANTED);
-    if (school === ButtonState.WANTED) setSchool(ButtonState.UNWANTED);
-    if (school === ButtonState.UNWANTED) setSchool(ButtonState.WHATEVER);
+    if (school === ButtonState.WANTED) setSchool(ButtonState.WHATEVER);
   }
 
   const handleRestaurantClick = () => {
     if (restaurant === ButtonState.WHATEVER) setRestaurant(ButtonState.WANTED);
-    if (restaurant === ButtonState.WANTED) setRestaurant(ButtonState.UNWANTED);
-    if (restaurant === ButtonState.UNWANTED) setRestaurant(ButtonState.WHATEVER);
+    if (restaurant === ButtonState.WANTED) setRestaurant(ButtonState.WHATEVER);
   }
 
   const handleAldiClick = () => {
@@ -44,15 +42,19 @@ export default function App() {
 
   const [goldilocksMapProps, setGoldilocksMapProps] = useState<GoldilocksData>();
 
-  const airportService = new AirportService();
 
-  const handleClick = async () => {
-    const airports = await airportService.getNoise();
-    const schools = await airportService.getSchools();
-    const restaurants = await airportService.getRestaurants();
-    const aldi = await airportService.getAldi();
-    setGoldilocksMapProps({ airports, schools, restaurants, aldi })
-  }
+  useEffect(() => {
+    async function fetchMyAPI() {
+      const airportService = new AirportService();
+      const airports = await airportService.getNoise();
+      const schools = await airportService.getSchools();
+      const restaurants = await airportService.getRestaurants();
+      const aldi = await airportService.getAldi();
+      setGoldilocksMapProps({ airports, schools, restaurants, aldi })
+    }
+
+    fetchMyAPI()
+  }, [setGoldilocksMapProps])
 
   return (
     <div className="grid grid-cols-2 gap-4">
@@ -65,18 +67,13 @@ export default function App() {
         <div className="p-12 ">
 
           <div className="grid gap-6 justify-items-center">
-            <AirportNoiseButton state={airport} handler={handleAirportClick} whateverText="Flughäfen sind mir egal" wantedText="Ich fliege öfter um die Welt" unwantedText="Ich hasse Flugzeuglärm" />
-            <AirportNoiseButton state={school} handler={handleSchoolClick} whateverText="Schulen sind mir egal" wantedText="Meine Kinder müssen zur Schule" unwantedText="Ich hasse Kinder" />
-            <AirportNoiseButton state={restaurant} handler={handleRestaurantClick} whateverText="Restaurants sind mir egal" wantedText="Ich gehe gerne essen" unwantedText="Ich koche Zuhause" />
-            <AirportNoiseButton state={aldiState} handler={handleAldiClick} whateverText="Aldi ist mir egal" wantedText="Aldi Süd beschde" unwantedText="Aldi Nord über alles" />
+            <AirportNoiseButton state={airport} handler={handleAirportClick} whateverText="Flughäfen sind mir egal" wantedText="Ich fliege öfter um die Welt" unwantedText="Ich hasse Flugzeuglärm!" />
+            <AirportNoiseButton state={school} handler={handleSchoolClick} whateverText="Schulen sind mir egal" wantedText="Meine Kinder müssen zur Schule" unwantedText="Kinder sind zu laut!" disabled={true} />
+            <AirportNoiseButton state={restaurant} handler={handleRestaurantClick} whateverText="Restaurants sind mir egal" wantedText="Ich gehe gerne essen" unwantedText="Ich koche immer Zuhause!" disabled={true} />
+            <AirportNoiseButton state={aldiState} handler={handleAldiClick} whateverText="Aldi ist mir egal" wantedText="Aldi Süd beschde" unwantedText="Aldi Nord über alles!" />
           </div>
         </div>
-        <div className="flex justify-end ">
-          <button className="bg-buttonGreen text-white font-semiboldbg-buttonGreen hover:bg-buttonGreenHover"
-            onClick={handleClick}>
-            <div className="border-double border-4 border-black py-2 px-4 text-3xl ">Suchen!</div>
-          </button>
-        </div>
+
 
       </div>
       <div className="h-screen p-6">

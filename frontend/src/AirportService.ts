@@ -17,6 +17,7 @@ export interface RestaurantData {
 export interface AldiData {
     nord: [number, number][];
     sued: [number, number][];
+    germany: [number, number][];
 }
 
 export class AirportService {

@@ -6,9 +6,10 @@ interface ButtonProps {
   whateverText: string,
   wantedText: string,
   unwantedText: string,
+  disabled?: boolean
 }
 
-export default function AirportNoiseButton({ state, handler, whateverText, wantedText, unwantedText }: ButtonProps) {
+export default function AirportNoiseButton({ state, handler, whateverText, wantedText, unwantedText, disabled }: ButtonProps) {
 
   return (
     <button className={`bg-transparent text-white font-semibold
