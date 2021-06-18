@@ -14,6 +14,11 @@ export interface RestaurantData {
     rad: number;
 }
 
+export interface AldiData {
+    nord: [number, number][];
+    sued: [number, number][];
+}
+
 export class AirportService {
 
     private baseUrl: string = "http://localhost:8000";
@@ -35,5 +40,12 @@ export class AirportService {
             .then(request => request.json())
             .then(json => json as RestaurantData[]);
     }
+
+    async getAldi(): Promise<AldiData> {
+        return fetch(`${this.baseUrl}/aldi`)
+            .then(request => request.json())
+            .then(json => json as AldiData);
+    }
+
 }
 

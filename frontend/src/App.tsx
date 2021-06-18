@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import AirportNoiseButton from './AirportNoiseButton';
-import { AirportService } from './AirportService';
+import { AirportService, AldiData } from './AirportService';
 import { GoldilocksMap, GoldilocksMapProps } from './GoldilocksMap';
 import Logo from './logofont.png';
 import Pattern from "./pattern.jpg";
@@ -15,7 +15,8 @@ export default function App() {
     const airports = await airportService.getNoise();
     const schools = await airportService.getSchools();
     const restaurants = await airportService.getRestaurants();
-    setGoldilocksMapProps({ airports, schools, restaurants })
+    const aldi = await airportService.getAldi();
+    setGoldilocksMapProps({ airports, schools, restaurants, aldi })
   }
 
   return (
@@ -47,7 +48,9 @@ export default function App() {
           <GoldilocksMap
             airports={goldilocksMapProps?.airports || []}
             schools={goldilocksMapProps?.schools || []}
-            restaurants={goldilocksMapProps?.restaurants || []} />
+            restaurants={goldilocksMapProps?.restaurants || []}
+            aldi={goldilocksMapProps?.aldi}
+          />
         </div>
       </div>
 
