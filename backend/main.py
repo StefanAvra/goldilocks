@@ -3,9 +3,9 @@ from typing import Optional
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from data import airports, schools, restaurants
+from data import airports, schools, restaurants, aldi
 
-from tools import change_lat_long
+from tools import change_lat_long, fixed_rad_airports
 
 app = FastAPI()
 
@@ -29,7 +29,7 @@ def read_root():
 
 @app.get("/airport-noise/")
 def get_airport_noise():
-    return airports.airports
+    return fixed_rad_airports(airports.airports, 7.5)
 
 
 @app.get("/aqi/")
@@ -39,12 +39,15 @@ def get_aqi():
 
 
 @app.get("/schools/")
-def get_airport_noise():
+def get_schools():
     return change_lat_long(schools.schools, 1)
-    
 
 
 @app.get("/retaurants/")
-def get_airport_noise():
+def get_restaurants():
     return change_lat_long(restaurants.restaurants, 0.3)
 
+
+@app.get("/aldi/")
+def get_aldi():
+    return {'nord': aldi.nord, 'sued': aldi.sued, 'germany': aldi.germany}
