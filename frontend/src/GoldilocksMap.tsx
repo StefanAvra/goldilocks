@@ -1,29 +1,41 @@
+import '@turf/meta';
+import * as turf from '@turf/turf';
 import { Feature, Polygon } from 'geojson';
+import { LatLngExpression } from 'leaflet';
 import "leaflet/dist/leaflet.css";
 import { useEffect, useState } from 'react';
-import { Circle, MapContainer, Polygon as PolygonComponent, TileLayer } from 'react-leaflet';
-import { AirportData, RestaurantData, SchoolData, AldiData } from './AirportService';
-import * as turf from '@turf/turf'
-import '@turf/meta'
-import { latLng, LatLngBoundsExpression, LatLngExpression, LatLngTuple } from 'leaflet';
+import { MapContainer, Polygon as PolygonComponent, TileLayer } from 'react-leaflet';
+import { AirportData, AldiData, RestaurantData, SchoolData } from './AirportService';
+import { ButtonState } from './App';
 
-export interface GoldilocksMapProps {
+
+export interface GoldilocksData {
   airports: AirportData[];
   schools: SchoolData[];
   restaurants: RestaurantData[];
-  aldi?: AldiData;
+  aldi: AldiData;
 }
 
-export function GoldilocksMap({ airports, schools, restaurants, aldi }: GoldilocksMapProps) {
+export interface GoldilocksMapProps {
+  goldilocksData?: GoldilocksData
+  airportState: ButtonState;
+  schoolState: ButtonState;
+  restaurantState: ButtonState;
+  aldiState: ButtonState;
+}
+
+export function GoldilocksMap({ goldilocksData, airportState, schoolState, restaurantState, aldiState }: GoldilocksMapProps) {
 
   const [intersections, setIntersections] = useState<Feature<Polygon>[]>([])
   const [differences, setDifferences] = useState<Feature<Polygon>[]>([])
 
   useEffect(() => {
 
-    var airportCircles = airports.map(a => turf.circle(turf.point(a.coordinates), a.rad));
-    var schoolCircles = schools.map(s => turf.circle(turf.point(s.coordinates), s.rad))
-    var restaurantCircles = restaurants.map(r => turf.circle(turf.point(r.coordinates), r.rad));
+    if(!goldilocksData) return;
+    
+    var airportCircles = goldilocksData.airports.map(a => turf.circle(turf.point(a.coordinates), a.rad));
+    var schoolCircles = goldilocksData.schools.map(s => turf.circle(turf.point(s.coordinates), s.rad))
+    var restaurantCircles = goldilocksData.restaurants.map(r => turf.circle(turf.point(r.coordinates), r.rad));
 
     let firstIntersectionCircles: Feature<Polygon>[] = [];
 
@@ -47,10 +59,10 @@ export function GoldilocksMap({ airports, schools, restaurants, aldi }: Goldiloc
       })
     })
 
-    if (aldi && aldi.nord && aldi.sued) {
+    if (goldilocksData.aldi && goldilocksData.aldi.nord && goldilocksData.aldi.sued) {
 
-      aldi.nord.push(aldi.nord[0]);
-      let aldiNord = turf.polygon([aldi.nord]);
+      goldilocksData.aldi.nord.push(goldilocksData.aldi.nord[0]);
+      let aldiNord = turf.polygon([goldilocksData.aldi.nord]);
 
       airportCircles.forEach(a => {
         let diff = turf.difference(aldiNord, a);
@@ -61,7 +73,7 @@ export function GoldilocksMap({ airports, schools, restaurants, aldi }: Goldiloc
 
     setIntersections(intersectionCircles);
 
-  }, [airports, schools, restaurants, aldi, setIntersections, setDifferences])
+  }, [goldilocksData, setIntersections, setDifferences])
 
 
   return (

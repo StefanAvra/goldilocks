@@ -1,20 +1,14 @@
-import { useState } from "react";
+import { ButtonState } from "./App";
 
-enum ButtonState {
-  WANTED,
-  UNWANTED,
-  WHATEVER
+interface ButtonProps {
+  state: ButtonState,
+  handler: () => void,
+  whateverText: string,
+  wantedText: string,
+  unwantedText: string,
 }
 
-export default function AirportNoiseButton() {
-
-  const [state, setState] = useState<ButtonState>(ButtonState.WHATEVER)
-
-  const handleClick = () => {
-    if (state === ButtonState.WHATEVER) setState(ButtonState.WANTED);
-    if (state === ButtonState.WANTED) setState(ButtonState.UNWANTED);
-    if (state === ButtonState.UNWANTED) setState(ButtonState.WHATEVER);
-  }
+export default function AirportNoiseButton({ state, handler, whateverText, wantedText, unwantedText }: ButtonProps) {
 
   return (
     <button className={`bg-transparent text-white font-semibold
@@ -22,11 +16,11 @@ export default function AirportNoiseButton() {
        ${state === ButtonState.WANTED && "bg-buttonGreen hover:bg-buttonGreen"}
        ${state === ButtonState.UNWANTED && "bg-buttonRed hover:bg-buttonRed"}
        `}
-      onClick={handleClick}>
+      onClick={handler}>
       <div className="border-double border-4 border-black py-2 px-4 text-3xl ">
-        {state === ButtonState.WHATEVER && "Reisen ist mir egal."}
-        {state === ButtonState.WANTED && "Ich liebe Jetlag!"}
-        {state === ButtonState.UNWANTED && "Ich hasse Flugzeuglärm!"}
+        {state === ButtonState.WHATEVER && whateverText}
+        {state === ButtonState.WANTED && wantedText}
+        {state === ButtonState.UNWANTED && unwantedText}
       </div>
     </button>
   );
