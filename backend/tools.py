@@ -40,7 +40,8 @@ def scrape_places_near_airports(q_type, keyword=None):
     from data import airports
     places = []
     for airport in airports.airports:
-        response = get_nearby_places(location=f'{airport["coordinates"][0]},{airport["coordinates"][1]}', q_type=q_type, keyword=keyword)
+        response = get_nearby_places(
+            location=f'{airport["coordinates"][0]},{airport["coordinates"][1]}', q_type=q_type, keyword=keyword)
         for result in response['results']:
             # print(result)
             places.append(result['geometry']['location'])
@@ -51,5 +52,13 @@ def change_lat_long(locations, rad):
     result = []
     for l in locations:
         l = {'coordinates': [l['lat'], l['lng']], 'rad': rad}
+        result.append(l)
+    return result
+
+
+def fixed_rad_airports(locations, rad):
+    result = []
+    for l in locations:
+        l = {'coordinates': l['coordinates'], 'rad': rad}
         result.append(l)
     return result
