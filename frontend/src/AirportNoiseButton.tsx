@@ -14,7 +14,6 @@ export default function AirportNoiseButton() {
     if (state === ButtonState.WHATEVER) setState(ButtonState.WANTED);
     if (state === ButtonState.WANTED) setState(ButtonState.UNWANTED);
     if (state === ButtonState.UNWANTED) setState(ButtonState.WHATEVER);
-
   }
 
   return (
