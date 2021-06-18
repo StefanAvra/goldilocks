@@ -21,11 +21,11 @@ export function HeatMapLayer() {
     fetchData();
   }, [setData])
 
-  var center = point([0, 9.245882875524904]);
+  var center = point([48.5, 9.245882875524904]);
   var radius = 200;
   var circle = turf.circle(center, radius);
 
-  var center2 = point([0, 11.704768133631378]);
+  var center2 = point([48.5, 11.704768133631378]);
   var circle2 = turf.circle(center2, radius);
 
   var union = turf.intersect(circle, circle2);
