@@ -1,17 +1,17 @@
 
 export interface AirportData {
     coordinates: [number, number];
-    intensity: number;
+    rad: number;
 }
 
 export interface SchoolData {
     coordinates: [number, number];
-    radius: number;
+    rad: number;
 }
 
 export interface RestaurantData {
     coordinates: [number, number];
-    radius: number;
+    rad: number;
 }
 
 export class AirportService {

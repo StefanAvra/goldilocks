@@ -1,26 +1,21 @@
 import { useState } from 'react';
 import AirportNoiseButton from './AirportNoiseButton';
-import { AirportData, AirportService, RestaurantData, SchoolData } from './AirportService';
-import { GoldilocksMap } from './GoldilocksMap';
-import Logo from './logofont.png'
-import Pattern from "./pattern.jpg"
+import { AirportService } from './AirportService';
+import { GoldilocksMap, GoldilocksMapProps } from './GoldilocksMap';
+import Logo from './logofont.png';
+import Pattern from "./pattern.jpg";
 
 
 export default function App() {
-  const [airportData, setAirportData] = useState<AirportData[]>([]);
-  const [schoolData, setSchoolData] = useState<SchoolData[]>([]);
-  const [restaurantData, setRestaurantData] = useState<RestaurantData[]>([]);
+  const [goldilocksMapProps, setGoldilocksMapProps] = useState<GoldilocksMapProps>();
 
   const airportService = new AirportService();
-
 
   const handleClick = async () => {
     const airports = await airportService.getNoise();
     const schools = await airportService.getSchools();
     const restaurants = await airportService.getRestaurants();
-    setAirportData(airports);
-    setSchoolData(schools);
-    setRestaurantData(restaurants);
+    setGoldilocksMapProps({ airports, schools, restaurants })
   }
 
   return (
@@ -49,7 +44,10 @@ export default function App() {
       </div>
       <div className="h-screen p-6">
         <div className="h-full p-2 border-double border-8 border-black">
-          <GoldilocksMap airports={airportData} schools={schoolData} restaurants={restaurantData} />
+          <GoldilocksMap
+            airports={goldilocksMapProps?.airports || []}
+            schools={goldilocksMapProps?.schools || []}
+            restaurants={goldilocksMapProps?.restaurants || []} />
         </div>
       </div>
 

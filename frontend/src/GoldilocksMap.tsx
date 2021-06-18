@@ -2,7 +2,7 @@ import { Circle, MapContainer, TileLayer } from 'react-leaflet';
 import { AirportData, SchoolData, RestaurantData } from './AirportService';
 import "leaflet/dist/leaflet.css";
 
-interface GoldilocksMapProps {
+export interface GoldilocksMapProps {
   airports: AirportData[];
   schools: SchoolData[];
   restaurants: RestaurantData[];
@@ -33,9 +33,9 @@ export function GoldilocksMap({ airports, schools, restaurants }: GoldilocksMapP
         attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      {airports.map(d => <Circle center={d.coordinates} radius={d.intensity * 10000} />)}
-      {schools.map(d => <Circle center={d.coordinates} radius={d.radius * 10000} />)}
-      {restaurants.map(d => <Circle center={d.coordinates} radius={d.radius * 10000} />)}
+      {airports.map(d => <Circle center={d.coordinates} radius={7500} color="red" />)}
+      {schools.map(d => <Circle center={d.coordinates} radius={d.rad * 1000} color="green" />)}
+      {restaurants.map(d => <Circle center={d.coordinates} radius={d.rad * 1000} color="yellow" />)}
     </MapContainer>
   );
 }
