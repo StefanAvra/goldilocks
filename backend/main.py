@@ -39,16 +39,15 @@ def get_aqi():
 
 
 @app.get("/schools/")
-def get_airport_noise():
+def get_schools():
     return change_lat_long(schools.schools, 1)
-    
 
 
 @app.get("/retaurants/")
-def get_airport_noise():
+def get_restaurants():
     return change_lat_long(restaurants.restaurants, 0.3)
 
 
 @app.get("/aldi/")
-def get_airport_noise():
-    return {'nord': aldi.nord, 'sued': aldi.sued}
+def get_aldi():
+    return {'nord': aldi.nord, 'sued': aldi.sued, 'germany': aldi.germany}
