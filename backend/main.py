@@ -41,7 +41,6 @@ def get_aqi():
 @app.get("/schools/")
 def get_schools():
     return change_lat_long(schools.schools, 1)
-    
 
 
 @app.get("/retaurants/")
