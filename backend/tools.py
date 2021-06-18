@@ -46,3 +46,10 @@ def scrape_places_near_airports(q_type, keyword=None):
             places.append(result['geometry']['location'])
     return places
 
+
+def change_lat_long(locations, rad):
+    result = []
+    for l in locations:
+        l = {'coordinates': [l['lat'], l['lng']], 'rad': rad}
+        result.append(l)
+    return result

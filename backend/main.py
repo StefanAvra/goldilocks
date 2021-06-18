@@ -5,6 +5,8 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from data import airports, schools, restaurants
 
+from tools import change_lat_long
+
 app = FastAPI()
 
 origins = [
@@ -38,9 +40,11 @@ def get_aqi():
 
 @app.get("/schools/")
 def get_airport_noise():
-    return schools.schools
+    return change_lat_long(schools.schools, 1)
+    
 
 
 @app.get("/retaurants/")
 def get_airport_noise():
-    return restaurants.restaurants
+    return change_lat_long(restaurants.restaurants, 0.3)
+
