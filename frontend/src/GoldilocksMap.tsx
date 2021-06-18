@@ -1,6 +1,10 @@
-import { Circle, MapContainer, TileLayer } from 'react-leaflet';
-import { AirportData, SchoolData, RestaurantData } from './AirportService';
+import { Feature, Polygon } from 'geojson';
 import "leaflet/dist/leaflet.css";
+import { useEffect, useState } from 'react';
+import { Circle, MapContainer, Polygon as PolygonComponent, TileLayer } from 'react-leaflet';
+import { AirportData, RestaurantData, SchoolData } from './AirportService';
+import * as turf from '@turf/turf'
+import { LatLngExpression } from 'leaflet';
 
 export interface GoldilocksMapProps {
   airports: AirportData[];
@@ -10,22 +14,40 @@ export interface GoldilocksMapProps {
 
 export function GoldilocksMap({ airports, schools, restaurants }: GoldilocksMapProps) {
 
+  const [intersections, setIntersections] = useState<Feature<Polygon>[]>([])
 
-  /*
-  var center = point([48.5, 9.245882875524904]);
-  var radius = 200;
-  var circle = turf.circle(center, radius);
+  useEffect(() => {
 
-  var center2 = point([48.5, 11.704768133631378]);
-  var circle2 = turf.circle(center2, radius);
+    var airportCircles = airports.map(a => turf.circle(turf.point(a.coordinates), 7.5));
+    var schoolCircles = schools.map(s => turf.circle(turf.point(s.coordinates), s.rad))
+    var restaurantCircles = restaurants.map(r => turf.circle(turf.point(r.coordinates), r.rad));
 
-  var union = turf.intersect(circle, circle2);
+    let firstIntersectionCircles: Feature<Polygon>[] = [];
 
-  console.log(union.geometry.coordinates);
-  const purpleOptions = { color: 'purple' }
-  const redOptions = { color: 'red' }
-  const blueOptions = { color: 'blue' }
-  */
+    airportCircles.forEach(a => {
+      schoolCircles.forEach(s => {
+        let intersection = turf.intersect(a, s);
+        if (intersection != null) {
+          firstIntersectionCircles.push(intersection as Feature<Polygon>)
+        }
+      })
+    })
+
+    let intersectionCircles: Feature<Polygon>[] = [];
+
+    firstIntersectionCircles.forEach(i => {
+      restaurantCircles.forEach(r => {
+        let intersection = turf.intersect(i, r);
+        if (intersection != null) {
+          intersectionCircles.push(intersection as Feature<Polygon>)
+        }
+      })
+    })
+
+
+    setIntersections(intersectionCircles);
+
+  }, [airports, schools, restaurants, setIntersections])
 
   return (
     <MapContainer className={"h-full"} center={[51.1657, 10.4515]} zoom={6.4} scrollWheelZoom={false}>
@@ -36,6 +58,7 @@ export function GoldilocksMap({ airports, schools, restaurants }: GoldilocksMapP
       {airports.map(d => <Circle center={d.coordinates} radius={7500} color="red" />)}
       {schools.map(d => <Circle center={d.coordinates} radius={d.rad * 1000} color="green" />)}
       {restaurants.map(d => <Circle center={d.coordinates} radius={d.rad * 1000} color="yellow" />)}
+      {intersections.map(i => <PolygonComponent positions={i.geometry.coordinates as LatLngExpression[][]} color="blue" />)}
     </MapContainer>
   );
 }
